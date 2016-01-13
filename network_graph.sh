@@ -9,9 +9,25 @@ HOST_IP=""
 #out=$(ssh $HOST_IP $IFCONFIG $INTERFACE | grep bytes | awk '{print $6}' | cut -d : -f 2)
 in=$($IFCONFIG $INTERFACE | grep bytes| awk '{print $2}' | cut -d : -f 2)
 out=$($IFCONFIG $INTERFACE | grep bytes | awk '{print $6}' |  cut -d : -f 2)
+#COLOR DEFINITIION
+#RED='\033[0;31m'
+GREEN='\033[0;32m'
+COLOR_END='\033['
+SWITCH="\033["
+NORMAL='${SWITCH}0m'
+YELLOW="${SWITCH}1;33m"
+RED="${SWITCH}0;31m"
+RESET="\x1B[0m"
 echo $RRDDB
 
-#Create RRD if doesnt exist
+#check_interface=`$IFCONFIG $INTERFACE`
+echo "checking interface: $INTERFACE"
+if $IFCONFIG $INTERFACE &>> /dev/null; then
+	echo "$INTERFACE exist"
+	echo  -e "CHECK INTERFACE :" "$GREEN OK $RESET"
+	echo "Checking Round Robin Database"
+
+#reate RRD if doesnt exist
 if [ -e $RRDDB ];then
         echo "Round Robin Database $RRDDB already exist"
 else
@@ -77,3 +93,8 @@ cp $WORKDIR/$INTERFACE'_hourly.png' /var/www/html/TEST/$INTERFACE'_hourly.png'
 cp $WORKDIR/$INTERFACE'_daily.png' /var/www/html/TEST/$INTERFACE'_daily.png'
 cp $WORKDIR/$INTERFACE'_weekly.png' /var/www/html/TEST/$INTERFACE'_weekly.png'
 
+else
+
+	echo -e "Interface $INTERFACE doesnt exist:$RED failed $RESET "
+fi
+	
