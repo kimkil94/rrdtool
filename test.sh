@@ -6,11 +6,11 @@
 
 rrdtool=/usr/bin/rrdtool
 db=/var/lib/rrd/memory.rrd
-img=/var/www/html/monitoring/
+img=/var/www/html/monitoring
 
 if [ ! -e $db ]
 then 
-	$rrdtool create $db \
+	rrdtool create $db \
 	DS:usage:GAUGE:600:0:50000000000 \
 	RRA:AVERAGE:0.5:1:576 \
 	RRA:AVERAGE:0.5:6:672 \
@@ -18,11 +18,11 @@ then
 	RRA:AVERAGE:0.5:144:1460
 fi
 
-$rrdtool update $db -t usage N:`free -b |grep cache:|cut -d":" -f2|awk '{print $1}'`
+rrdtool update $db -t usage N:`free -b |grep cache:|cut -d":" -f2|awk '{print $1}'`
 
 for period in day week month year
 do
-	$rrdtool graph $img/memory-$period.png -s -1$period \
+	rrdtool graph $img/memory-$period.png -s -1$period \
 	-t "Memory usage the last $period" -z \
 	-c "BACK#FFFFFF" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
 	-c "MGRID#AAAAAA" -c "GRID#CCCCCC" -c "ARROW#333333" \
@@ -45,5 +45,6 @@ do
 	"GPRINT:min:%5.1lf %sB   " \
 	"GPRINT:max:%5.1lf %sB   " \
 	"GPRINT:avg:%5.1lf %sB   " \
-	"GPRINT:lst:%5.1lf %sB   \l" > /dev/null
+	"GPRINT:lst:%5.1lf %sB   \l" 
 done
+

@@ -1,8 +1,5 @@
 #!/bin/bash
 # memory.sh - Memory usage stats
-#
-# Copyright 2010 Frode Petterson. All rights reserved.
-# See README.rdoc for license. 
 
 rrdtool=/usr/bin/rrdtool
 db=/var/lib/rrd/MEM.rrd
@@ -27,20 +24,20 @@ for period in day week month year
 do
 	rrdtool graph $img/MEM-$period.png -s -1$period \
 	-t "Memory usage the last $period" -z \
-	-c "BACK#FFFFFF" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
+	-c "BACK#616066" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
 	-c "MGRID#AAAAAA" -c "GRID#CCCCCC" -c "ARROW#333333" \
 	-c "FONT#333333" -c "AXIS#333333" -c "FRAME#333333" \
         -h 134 -w 543 -l 0 -a PNG -v "B" \
-	DEF:usage=$db:usage:AVERAGE \
-	DEF:total=$db:total:AVERAGE\
-	VDEF:min_usage=usage,MINIMUM \
-        VDEF:max_usage=usage,MAXIMUM \
-        VDEF:avg_usage=usage,AVERAGE \
-        VDEF:lst_usage=usage,LAST \
+	DEF:total=$db:total:AVERAGE \
+	DEF:usage=$db:usage:AVERAGE\
 	VDEF:min_total=total,MINIMUM \
         VDEF:max_total=total,MAXIMUM \
         VDEF:avg_total=total,AVERAGE \
         VDEF:lst_total=total,LAST \
+	VDEF:min_usage=usage,MINIMUM \
+        VDEF:max_usage=usage,MAXIMUM \
+        VDEF:avg_usage=usage,AVERAGE \
+        VDEF:lst_usage=usage,LAST \
 	"COMMENT: \l" \
 	"COMMENT:               " \
 	"COMMENT:Minimum    " \
@@ -48,10 +45,10 @@ do
 	"COMMENT:Average    " \
 	"COMMENT:Current    \l" \
 	"COMMENT:   " \
-	"AREA:usage#EDA362:Usage  " \
-	"LINE1:usage#F47200" \
 	"AREA:total#00FF00:Total  " \
-        "LINE1:total#00FF00" \
+	"LINE1:total#F47200" \
+	"AREA:usage#E04000:Usage  " \
+        "LINE1:usage#F47200" \
 	"GPRINT:min_usage:%5.1lf %sB   " \
 	"GPRINT:max_usage:%5.1lf %sB   " \
 	"GPRINT:avg_usage:%5.1lf %sB   " \
