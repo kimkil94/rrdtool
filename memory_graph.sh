@@ -21,7 +21,7 @@ fi
 
 rrdtool update $DB N:`free -b |grep cache:|cut -d":" -f2|awk '{print $1}'`:`free -b | grep Mem | awk '{print $2}'`
 
-for period in day week month year
+for period in hour day week month year
 do
 	rrdtool graph $img/memory_usage-$period.png -s -1$period \
 	-t "Memory usage the last $period" -z \
@@ -56,5 +56,9 @@ do
 	"GPRINT:lst_usage:%5.1lf %sB   \l" 
 done
 
+if grep $WORKDIR/memory_graph.sh /var/spool/cron/crontabs/root;then
+	echo "cron task already set"
+else
+echo "creating cron task..."
 echo "  */5  *  *  *  *  $WORKDIR/memory_graph.sh" >> /var/spool/cron/crontabs/root
-
+fi
