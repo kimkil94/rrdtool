@@ -40,8 +40,10 @@ do
         VDEF:max_usage=usage,MAXIMUM \
         VDEF:avg_usage=usage,AVERAGE \
         VDEF:lst_usage=usage,LAST \
-	"COMMENT: \l" \
-	"COMMENT:               " \
+	"COMMENT:    \l" \
+	"COMMENT: " \
+	"GPRINT:max_total:%6.1lf %sB   " \
+	"COMMENT:           " \
 	"COMMENT:Minimum    " \
 	"COMMENT:Maximum    " \
 	"COMMENT:Average    " \
