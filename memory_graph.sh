@@ -1,58 +1,44 @@
 #!/bin/bash
-
-WORKDIR="/root/rrd/TEST"
-DB="$WORKDIR/memory.rrd"
-
-mem_total=$(grep MemTotal /proc/meminfo  | awk '{print $2}')
-mem_free=$(grep MemFree /proc/meminfo  | awk '{print $2}')
-mem_used=$(( mem_total - mem_free))
-
-echo "Total Memory : $mem_total"
-echo "Free Memory : $mem_free"
-echo "Used Memory : $mem_used"
+# memory.sh - Memory usage stats
 
 
-if [ -e $DB ];then 
-	echo "$DB already exist.."
+WORKDIR="/var/lib/rrd"
+DB=$WORKDIR/memory_usage.rrd
+img=/var/www/html/stats
 
-else
+if [ ! -e $DB ]
+then 
 	rrdtool create $DB \
-        	--start 1023654125 \
-        	--step 120 \
-        	DS:mem_total:GAUGE:600:0:671744 \
-		DS:mem_used:GAUGE:600:0:671744 \
-        	RRA:AVERAGE:0.5:12:24 \
-        	RRA:AVERAGE:0.5:288:31
+	--step 60 \
+	--step 60 \
+	DS:usage:GAUGE:600:0:50000000000  \
+	DS:total:GAUGE:600:0:50000000000 \
+	RRA:AVERAGE:0.5:1:576 \
+	RRA:AVERAGE:0.5:6:672 \
+	RRA:AVERAGE:0.5:24:732 \
+	RRA:AVERAGE:0.5:144:1460 
 fi
 
-rrdupdate $DB N:$mem_total:$mem_used
+rrdtool update $DB N:`free -b |grep cache:|cut -d":" -f2|awk '{print $1}'`:`free -b | grep Mem | awk '{print $2}'`
 
-
-
-#rx = total ; tx : used
-#rrdtool graph $WORKDIR/mem_hourly.png --start end-3600s   \
-#                -a PNG -t "Memory usage" --vertical-label "bits/s" \
-#                -w 1260 -h 800 -r \
-#                DEF:mem_total=$DB:mem_total:AVERAGE \
-#                DEF:mem_used=$DB:mem_used:AVERAGE \
-#                CDEF:mem_totalb=mem_total,0,671744,LIMIT,UN,0,mem_total,IF,1024,/ \
-#                CDEF:mem_usedb=mem_used,8,\* \
-#                AREA:mem_totalb#EC9D48:Memory_total \
-#                AREA:mem_usedb#ECD748:Memory_used \
-#                LINE1:mem_totalb#CC7016:Memory_total \
-#                LINE1:mem_usedb#C9B215:Memory_used
-
-rrdtool graph $WORKDIR/mem_hourly.png --start end-3600s \
-	-t "Memory usage the last hour" -z \
-	-c "BACK#FFFFFF" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
+for period in day week month year
+do
+	rrdtool graph $img/memory_usage-$period.png -s -1$period \
+	-t "Memory usage the last $period" -z \
+	-c "BACK#616066" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
 	-c "MGRID#AAAAAA" -c "GRID#CCCCCC" -c "ARROW#333333" \
 	-c "FONT#333333" -c "AXIS#333333" -c "FRAME#333333" \
         -h 134 -w 543 -l 0 -a PNG -v "B" \
-	DEF:mem_used=$DB:mem_used:AVERAGE \
-	VDEF:min=mem_used,MINIMUM \
-        VDEF:max=mem_used,MAXIMUM \
-        VDEF:avg=mem_used,AVERAGE \
-        VDEF:lst=mem_used,LAST \
+	DEF:total=$DB:total:AVERAGE \
+	DEF:usage=$DB:usage:AVERAGE\
+	VDEF:min_total=total,MINIMUM \
+        VDEF:max_total=total,MAXIMUM \
+        VDEF:avg_total=total,AVERAGE \
+        VDEF:lst_total=total,LAST \
+	VDEF:min_usage=usage,MINIMUM \
+        VDEF:max_usage=usage,MAXIMUM \
+        VDEF:avg_usage=usage,AVERAGE \
+        VDEF:lst_usage=usage,LAST \
 	"COMMENT: \l" \
 	"COMMENT:               " \
 	"COMMENT:Minimum    " \
@@ -60,12 +46,13 @@ rrdtool graph $WORKDIR/mem_hourly.png --start end-3600s \
 	"COMMENT:Average    " \
 	"COMMENT:Current    \l" \
 	"COMMENT:   " \
-	"AREA:mem_used#EDA362:Usage  " \
-	"LINE1:mem_used#F47200" \
-	"GPRINT:min:%5.1lf %sB   " \
-	"GPRINT:max:%5.1lf %sB   " \
-	"GPRINT:avg:%5.1lf %sB   " \
-	"GPRINT:lst:%5.1lf %sB   \l" > /dev/null
+	"AREA:total#00FF00:Total  " \
+	"LINE1:total#F47200" \
+	"AREA:usage#E04000:Usage  " \
+        "LINE1:usage#F47200" \
+	"GPRINT:min_usage:%5.1lf %sB   " \
+	"GPRINT:max_usage:%5.1lf %sB   " \
+	"GPRINT:avg_usage:%5.1lf %sB   " \
+	"GPRINT:lst_usage:%5.1lf %sB   \l" 
+done
 
-
-cp $WORKDIR/mem_hourly.png /var/www/html/
