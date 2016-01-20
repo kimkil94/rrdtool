@@ -2,7 +2,7 @@
 #===KimkIL=== 2016(c)
 
 IFCONFIG="/sbin/ifconfig"
-INTERFACE="et"
+INTERFACE="eth0"
 WORKDIR="/root/rrd/TEST"
 WEBDIR="/var/www/html/monitoring"
 ACTUALDIR=$(pwd)
@@ -10,6 +10,7 @@ RRDDB="$WORKDIR/$INTERFACE'.rrd'"
 HOST_IP=""
 in=`$IFCONFIG $INTERFACE | grep bytes| awk '{print $2}' | cut -d : -f 2`
 out=`$IFCONFIG $INTERFACE | grep bytes | awk '{print $6}' |  cut -d : -f 2`
+
 
 #COLOR DEFINITIION
 GREEN='\033[0;32m'
@@ -156,6 +157,9 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 	cp $WORKDIR/$INTERFACE'_hourly.png' $WEBDIR/$INTERFACE'_hourly.png'
 	cp $WORKDIR/$INTERFACE'_daily.png' $WEBDIR/$INTERFACE'_daily.png'
 	cp $WORKDIR/$INTERFACE'_weekly.png' $WEBDIR/$INTERFACE'_weekly.png'
+	echo "  * * * * * $WORKDIR/network_graph.sh" >> /var/spool/cron/crontabs/root
+	echo 
+
 
 else
 	if [ $result_check_interface == "1" ];then
