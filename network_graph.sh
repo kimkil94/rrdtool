@@ -6,6 +6,7 @@ INTERFACE="eth0"
 WORKDIR="/var/lib/rrd"
 WEBDIR="/var/www/html/stats"
 ACTUALDIR=$(pwd)
+RUNDIR="/opt/rrd/rrdtool"
 RRDDB="$WORKDIR/$INTERFACE'.rrd'"
 HOST_IP=""
 in=`$IFCONFIG $INTERFACE | grep bytes| awk '{print $2}' | cut -d : -f 2`
@@ -158,11 +159,11 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 	cp $WORKDIR/$INTERFACE'_daily.png' $WEBDIR/$INTERFACE'_daily.png'
 	cp $WORKDIR/$INTERFACE'_weekly.png' $WEBDIR/$INTERFACE'_weekly.png'
 	
-if grep $WORKDIR/network.graph.sh /var/spool/cron/crontabs/root;then
+if grep $RUNDIR/network.graph.sh /var/spool/cron/crontabs/root;then
 	echo "Crontab is set"
 else
 	echo "Setting crontab.."
-	echo "  * * * * * $WORKDIR/network_graph.sh" >> /var/spool/cron/crontabs/root
+	echo "  * * * * * $RUNDIR/network_graph.sh" >> /var/spool/cron/crontabs/root
 fi
 
 

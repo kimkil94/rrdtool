@@ -5,6 +5,7 @@
 WORKDIR="/var/lib/rrd"
 DB=$WORKDIR/memory_usage.rrd
 img=/var/www/html/stats
+RUNDIR="/opt/rrd/rrdtool"
 
 if [ ! -e $DB ]
 then 
@@ -56,9 +57,9 @@ do
 	"GPRINT:lst_usage:%5.1lf %sB   \l" 
 done
 
-if grep $WORKDIR/memory_graph.sh /var/spool/cron/crontabs/root;then
+if grep $RUNDIR/memory_graph.sh /var/spool/cron/crontabs/root;then
 	echo "cron task already set"
 else
 echo "creating cron task..."
-echo "  */5  *  *  *  *  $WORKDIR/memory_graph.sh" >> /var/spool/cron/crontabs/root
+echo "  */5  *  *  *  *  $RUNDIR/memory_graph.sh" >> /var/spool/cron/crontabs/root
 fi
