@@ -3,8 +3,8 @@
 
 IFCONFIG="/sbin/ifconfig"
 INTERFACE="eth0"
-WORKDIR="/root/rrd/TEST"
-WEBDIR="/var/www/html/monitoring"
+WORKDIR="/var/lib/rrd"
+WEBDIR="/var/www/html/stats"
 ACTUALDIR=$(pwd)
 RRDDB="$WORKDIR/$INTERFACE'.rrd'"
 HOST_IP=""
