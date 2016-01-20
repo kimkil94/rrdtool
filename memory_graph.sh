@@ -56,5 +56,5 @@ do
 	"GPRINT:lst_usage:%5.1lf %sB   \l" 
 done
 
-echo "  *  *  *  *  *  $WORKDIR/memory_graph.sh" >> /var/spool/cron/crontabs/root
+echo "  */5  *  *  *  *  $WORKDIR/memory_graph.sh" >> /var/spool/cron/crontabs/root
 
