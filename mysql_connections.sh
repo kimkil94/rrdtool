@@ -8,8 +8,8 @@ WEBDIR=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
 
-established_conn=$(netstat -an | grep :443 | grep ESTABLISHED | wc -l)
-timewait_conn=$(netstat -an | grep :443 | grep TIME_WAIT| wc -l)
+established_conn=$(netstat -an | grep :3306 | grep ESTABLISHED | wc -l)
+timewait_conn=$(netstat -an | grep :3306 | grep TIME_WAIT| wc -l)
 echo $established_conn
 echo $timewait_conn
 
