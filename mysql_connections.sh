@@ -45,5 +45,5 @@ if grep $RUNDIR/mysql_connections.sh /var/spool/cron/crontabs/root;then
 	echo "cron task already set"
 else
 echo "creating cron task..."
-echo "  *  *  *  *  *  $RUNDIR/connections_graph.sh" >> $CRONTAB
+echo "  *  *  *  *  *  $RUNDIR/mysql_connections.sh" >> $CRONTAB
 fi
