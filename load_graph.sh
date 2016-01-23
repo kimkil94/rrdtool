@@ -7,6 +7,15 @@ DB=$WORKDIR/load.rrd
 WEBDIR=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
+WIDTH="785"
+HEIGHT="120"
+VERTICAL_LABEL="CPU load "
+RUNSCRIPT=$0
+SCRIPT_NAME=$(echo $RUNSCRIPT | cut -d / -f 2)
+
+
+echo $SCRIPT_NAME
+
 
 one_load=$(uptime | awk '{print $10}' | cut -d , -f 1)
 five_load=$(uptime | awk '{print $11}' | cut -d , -f 1)
@@ -30,8 +39,8 @@ rrdtool update $DB N:$one_load:$five_load
 for period in hour day week month year
 do
 
-	rrdtool graph $WEBDIR/load-$period.png -w 785 -h 120 -a PNG --slope-mode -s -1$period --end now \
-	--vertical-label "CPU load" \
+	rrdtool graph $WEBDIR/load-$period.png -w $WIDTH -h $HEIGHT -a PNG --slope-mode -s -1$period --end now \
+	--vertical-label "$VERTICAL_LABEL" \
 	DEF:one_load=$DB:one_load:AVERAGE \
 	DEF:five_load=$DB:five_load:AVERAGE \
 	AREA:one_load#f007:one_load \
@@ -40,9 +49,9 @@ do
 done
 
 #create cron task 
-if grep $RUNDIR/load_graph.sh /var/spool/cron/crontabs/root;then
+if grep $RUNDIR/$SCRIPT_NAME $CRONTAB;then
 	echo "cron task already set"
 else
 echo "creating cron task..."
-echo "  */5  *  *  *  *  $RUNDIR/load_graph.sh" >> $CRONTAB
+echo "  *  *  *  *  *  $RUNDIR/$SCRIPT_NAME" >> $CRONTAB
 fi

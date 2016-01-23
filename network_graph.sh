@@ -159,7 +159,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 	cp $WORKDIR/$INTERFACE'_daily.png' $WEBDIR/$INTERFACE'_daily.png'
 	cp $WORKDIR/$INTERFACE'_weekly.png' $WEBDIR/$INTERFACE'_weekly.png'
 	
-if grep $RUNDIR/network.graph.sh /var/spool/cron/crontabs/root;then
+if grep $RUNDIR/network_graph.sh /var/spool/cron/crontabs/root;then
 	echo "Crontab is set"
 else
 	echo "Setting crontab.."
