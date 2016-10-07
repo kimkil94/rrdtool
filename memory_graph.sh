@@ -14,10 +14,10 @@ then
 	--step 60 \
 	DS:usage:GAUGE:600:0:50000000000  \
 	DS:total:GAUGE:600:0:50000000000 \
-	RRA:AVERAGE:0.5:1:576 \
-	RRA:AVERAGE:0.5:6:672 \
-	RRA:AVERAGE:0.5:24:732 \
-	RRA:AVERAGE:0.5:144:1460 
+	RRA:AVERAGE:0.5:1:576d \
+	RRA:AVERAGE:0.5:6:672d \
+	RRA:AVERAGE:0.5:24:732d \
+	RRA:AVERAGE:0.5:144:1460d 
 fi
 
 rrdtool update $DB N:`free -b |grep cache:|cut -d":" -f2|awk '{print $1}'`:`free -b | grep Mem | awk '{print $2}'`

@@ -105,8 +105,8 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	--step 60 \
         	DS:$INTERFACE'_rx':COUNTER:120:0:U \
         	DS:$INTERFACE'_tx':COUNTER:120:0:U \
-        	RRA:AVERAGE:0.5:1:3600 \
-        	RRA:MAX:0.5:1:3600
+        	RRA:AVERAGE:0.5:1:600d \
+        	RRA:MAX:0.5:1:600d
         	if [ -a $RRDDB ];then
                 	echo "RRD database $RRDDB was created"
                 	echo "OK"
