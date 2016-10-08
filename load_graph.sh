@@ -41,10 +41,30 @@ do
 
 	rrdtool graph $WEBDIR/load-$period.png -w $WIDTH -h $HEIGHT -a PNG --slope-mode -s -1$period --end now \
 	--vertical-label "$VERTICAL_LABEL" \
+	--title "CPU load by $period ($(uname -n))" \
 	DEF:one_load=$DB:one_load:AVERAGE \
 	DEF:five_load=$DB:five_load:AVERAGE \
-	AREA:one_load#f007:one_load \
-	AREA:five_load#f005:five_load 
+	VDEF:min_five_load=five_load,MINIMUM \
+        VDEF:max_five_load=five_load,MAXIMUM \
+        VDEF:avg_five_load=five_load,AVERAGE \
+        VDEF:lst_five_load=five_load,LAST \
+        VDEF:min_one_load=one_load,MINIMUM \
+        VDEF:max_one_load=one_load,MAXIMUM \
+        VDEF:avg_one_load=one_load,AVERAGE \
+        VDEF:lst_one_load=one_load,LAST \
+	AREA:five_load#FA3C00:One_minute_load \
+	AREA:one_load#F99677:Last_Five_minute_load \
+	"COMMENT:    \l" \
+	"COMMENT:             " \
+	"COMMENT:             " \
+	"COMMENT:               " \
+        "COMMENT:Last one_load    " \
+        "COMMENT:Last five_load   \l" \
+	"COMMENT:                       "\
+	"COMMENT:                       "\
+        "GPRINT:lst_one_load:%5.1lf" \
+	"COMMENT:            "\
+        "GPRINT:lst_five_load:%5.1lf \l" 
 	 
 done
 

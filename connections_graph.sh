@@ -32,7 +32,8 @@ for period in hour day week month year
 do
 
 	rrdtool graph $WEBDIR/connections-$period.png -w 785 -h 120 -a PNG --slope-mode -s -1$period --end now \
-	--vertical-label "HTTP Connections" \
+	--vertical-label "Active HTTP connections"  \
+	--title "HTTP Connections by $period ($(uname -n))"\
 	DEF:established=$DB:established:AVERAGE \
 	DEF:timewait=$DB:timewait:AVERAGE \
 	AREA:established#f007:established_conn \

@@ -2,7 +2,7 @@
 #===KimkIL=== 2016(c)
 
 IFCONFIG="/sbin/ifconfig"
-INTERFACE="eth0"
+INTERFACE="venet0"
 WORKDIR="/var/lib/rrd"
 WEBDIR="/var/www/html/stats"
 ACTUALDIR=$(pwd)
