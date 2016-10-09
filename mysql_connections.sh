@@ -32,7 +32,7 @@ for period in hour day week month year
 do
 
 	rrdtool graph $WEBDIR/mysq_connections-$period.png -w 785 -h 120 -a PNG --slope-mode -s -1$period --end now \
-	--vertical-label "HTTP Connections" \
+	--vertical-label "MySQL Connections" \
 	DEF:established=$DB:established:AVERAGE \
 	DEF:timewait=$DB:timewait:AVERAGE \
 	AREA:established#f007:established_conn \
