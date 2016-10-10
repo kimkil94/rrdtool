@@ -140,7 +140,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 	#daily
 	rrdtool graph $WORKDIR/$INTERFACE'_daily.png' --start -1day   \
         	-a PNG -t "Daily - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
-        	-w $WIDTH -h $HEIGHTS -r \
+        	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
                 -c "SHADEA#000000" \
                 -c "SHADEB#000000" \
@@ -162,7 +162,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 	#create weekly graph
 	rrdtool graph $WORKDIR/$INTERFACE'_weekly.png' --start -1week   \
         	-a PNG -t "Weekly - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
-        	-w $WIDTH -h $HEIGHTS -r \
+        	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
                 -c "SHADEA#000000" \
                 -c "SHADEB#000000" \
