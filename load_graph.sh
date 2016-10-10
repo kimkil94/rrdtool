@@ -17,8 +17,8 @@ SCRIPT_NAME=$(echo $RUNSCRIPT | cut -d / -f 2)
 echo $SCRIPT_NAME
 
 
-one_load=$(uptime | awk '{print $10}' | cut -d , -f 1)
-five_load=$(uptime | awk '{print $11}' | cut -d , -f 1)
+one_load=$(/bin/cat /proc/loadavg | awk '{print $1}')
+five_load=$(/bin/cat /proc/loadavg | awk '{print $2}')
 fiveteen_load=$(uptime | awk '{print $12}')
 
 if [ ! -e $DB ]
