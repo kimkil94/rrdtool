@@ -7,7 +7,8 @@ DB=$WORKDIR/connections.rrd
 WEBDIR=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
-
+WIDTH="720"
+HEIGHT="200"
 established_conn=$(netstat -an | grep :80 | grep ESTABLISHED | wc -l)
 timewait_conn=$(netstat -an | grep :80 | grep TIME| wc -l)
 echo $established_conn
@@ -31,13 +32,22 @@ rrdtool update $DB N:$established_conn:$timewait_conn
 for period in hour day week month year
 do
 
-	rrdtool graph $WEBDIR/connections-$period.png -w 785 -h 120 -a PNG --slope-mode -s -1$period --end now \
+	rrdtool graph $WEBDIR/connections-$period.png -w $WIDTH -h $HEIGHT -a PNG --slope-mode -s -1$period --end now \
 	--vertical-label "Active HTTP connections"  \
 	--title "HTTP Connections by $period ($(uname -n))"\
+	  -c "BACK#000000" \
+        -c "SHADEA#000000" \
+        -c "SHADEB#000000" \
+        -c "FONT#DDDDDD" \
+        -c "CANVAS#202020" \
+        -c "GRID#666666" \
+        -c "MGRID#AAAAAA" \
+        -c "FRAME#202020" \
+        -c "ARROW#FFFFFF" \
 	DEF:established=$DB:established:AVERAGE \
 	DEF:timewait=$DB:timewait:AVERAGE \
 	AREA:established#f007:established_conn \
-	AREA:timewait#f005:timewait_conn 
+	AREA:timewait#f015:timewait_conn 
 	 
 done
 

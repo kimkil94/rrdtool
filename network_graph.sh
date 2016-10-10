@@ -11,7 +11,8 @@ RRDDB="$WORKDIR/$INTERFACE'.rrd'"
 HOST_IP=""
 in=`$IFCONFIG $INTERFACE | grep bytes| awk '{print $2}' | cut -d : -f 2`
 out=`$IFCONFIG $INTERFACE | grep bytes | awk '{print $6}' |  cut -d : -f 2`
-
+WIDTH="720"
+HEIGHT="220"
 
 #COLOR DEFINITIION
 GREEN='\033[0;32m'
@@ -117,7 +118,16 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 
 	rrdtool graph $WORKDIR/$INTERFACE'_hourly.png' --start end-3600s   \
         	-a PNG -t "Hourly - Network $HOST_IP Interface $INTERFACE" --vertical-label "bits/s" \
-        	-w 1260 -h 800 -r \
+        	-w $WIDTH -h $HEIGHT -r \
+		-c "BACK#000000" \
+	        -c "SHADEA#000000" \
+	        -c "SHADEB#000000" \
+        	-c "FONT#DDDDDD" \
+	        -c "CANVAS#202020" \
+	        -c "GRID#666666" \
+	        -c "MGRID#AAAAAA" \
+	        -c "FRAME#202020" \
+	        -c "ARROW#FFFFFF" \
         	DEF:$INTERFACE'_rx'=$RRDDB:$INTERFACE'_rx':AVERAGE \
         	DEF:$INTERFACE'_tx'=$RRDDB:$INTERFACE'_tx':AVERAGE \
         	CDEF:$INTERFACE'_rxb'=$INTERFACE'_rx',-8,\* \
@@ -128,9 +138,18 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:_$INTERFACE'-TX'
 
 	#daily
-	rrdtool graph $WORKDIR/$INTERFACE'_daily.png' --start end-86400s   \
+	rrdtool graph $WORKDIR/$INTERFACE'_daily.png' --start -1day   \
         	-a PNG -t "Daily - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
-        	-w 1260 -h 800 -r \
+        	-w $WIDTH -h $HEIGHTS -r \
+		-c "BACK#000000" \
+                -c "SHADEA#000000" \
+                -c "SHADEB#000000" \
+                -c "FONT#DDDDDD" \
+                -c "CANVAS#202020" \
+                -c "GRID#666666" \
+                -c "MGRID#AAAAAA" \
+                -c "FRAME#202020" \
+                -c "ARROW#FFFFFF" \
         	DEF:$INTERFACE'_rx'=$RRDDB:$INTERFACE'_rx':AVERAGE \
         	DEF:$INTERFACE'_tx'=$RRDDB:$INTERFACE'_tx':AVERAGE \
         	CDEF:$INTERFACE'_rxb'=$INTERFACE'_rx',-8,\* \
@@ -141,9 +160,18 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:$INTERFACE'-TX'
 
 	#create weekly graph
-	rrdtool graph $WORKDIR/$INTERFACE'_weekly.png' --start end-604800s   \
+	rrdtool graph $WORKDIR/$INTERFACE'_weekly.png' --start -1week   \
         	-a PNG -t "Weekly - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
-        	-w 1260 -h 800 -r \
+        	-w $WIDTH -h $HEIGHTS -r \
+		-c "BACK#000000" \
+                -c "SHADEA#000000" \
+                -c "SHADEB#000000" \
+                -c "FONT#DDDDDD" \
+                -c "CANVAS#202020" \
+                -c "GRID#666666" \
+                -c "MGRID#AAAAAA" \
+                -c "FRAME#202020" \
+                -c "ARROW#FFFFFF" \
         	DEF:$INTERFACE'_rx'=$RRDDB:$INTERFACE'_rx':AVERAGE \
         	DEF:$INTERFACE'_tx'=$RRDDB:$INTERFACE'_tx':AVERAGE \
         	CDEF:$INTERFACE'_rxb'=$INTERFACE'_rx',-8,\* \

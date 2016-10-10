@@ -7,6 +7,8 @@ DB=$WORKDIR/mysql_connections.rrd
 WEBDIR=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
+WIDTH="720"
+HEIGHT="200"
 
 established_conn=$(netstat -an | grep :3306 | grep ESTABLISHED | wc -l)
 timewait_conn=$(netstat -an | grep :3306 | grep TIME_WAIT| wc -l)
@@ -31,11 +33,20 @@ rrdtool update $DB N:$established_conn:$timewait_conn
 for period in hour day week month year
 do
 
-	rrdtool graph $WEBDIR/mysq_connections-$period.png -w 785 -h 120 -a PNG --slope-mode -s -1$period --end now \
+	rrdtool graph $WEBDIR/mysq_connections-$period.png -w $WIDTH -h $HEIGHT -a PNG --slope-mode -s -1$period --end now \
 	--vertical-label "MySQL Connections" \
+	      -c "BACK#000000" \
+        -c "SHADEA#000000" \
+        -c "SHADEB#000000" \
+        -c "FONT#DDDDDD" \
+        -c "CANVAS#202020" \
+        -c "GRID#666666" \
+        -c "MGRID#AAAAAA" \
+        -c "FRAME#202020" \
+        -c "ARROW#FFFFFF" \
 	DEF:established=$DB:established:AVERAGE \
 	DEF:timewait=$DB:timewait:AVERAGE \
-	AREA:established#f007:established_conn \
+	AREA:established#f019:established_conn \
 	AREA:timewait#f005:timewait_conn 
 	 
 done

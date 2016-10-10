@@ -7,8 +7,8 @@ DB=$WORKDIR/load.rrd
 WEBDIR=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
-WIDTH="785"
-HEIGHT="120"
+WIDTH="720"
+HEIGHT="200"
 VERTICAL_LABEL="CPU load "
 RUNSCRIPT=$0
 SCRIPT_NAME=$(echo $RUNSCRIPT | cut -d / -f 2)
@@ -42,6 +42,15 @@ do
 	rrdtool graph $WEBDIR/load-$period.png -w $WIDTH -h $HEIGHT -a PNG --slope-mode -s -1$period --end now \
 	--vertical-label "$VERTICAL_LABEL" \
 	--title "CPU load by $period ($(uname -n))" \
+	  -c "BACK#000000" \
+        -c "SHADEA#000000" \
+        -c "SHADEB#000000" \
+        -c "FONT#DDDDDD" \
+        -c "CANVAS#202020" \
+        -c "GRID#666666" \
+        -c "MGRID#AAAAAA" \
+        -c "FRAME#202020" \
+        -c "ARROW#FFFFFF" \
 	DEF:one_load=$DB:one_load:AVERAGE \
 	DEF:five_load=$DB:five_load:AVERAGE \
 	VDEF:min_five_load=five_load,MINIMUM \

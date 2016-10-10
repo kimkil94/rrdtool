@@ -6,6 +6,8 @@ WORKDIR="/var/lib/rrd"
 DB=$WORKDIR/memory_usage.rrd
 img=/var/www/html/stats
 RUNDIR="/opt/rrd/rrdtool"
+WIDTH="720"
+HEIGHT="200"
 
 if [ ! -e $DB ]
 then 
@@ -26,10 +28,16 @@ for period in hour day week month year
 do
 	rrdtool graph $img/memory_usage-$period.png -s -1$period \
 	-t "Memory usage the last $period" -z \
-	-c "BACK#616066" -c "SHADEA#FFFFFF" -c "SHADEB#FFFFFF" \
-	-c "MGRID#AAAAAA" -c "GRID#CCCCCC" -c "ARROW#333333" \
-	-c "FONT#333333" -c "AXIS#333333" -c "FRAME#333333" \
-        -h 134 -w 543 -l 0 -a PNG -v "B" \
+         -c "BACK#000000" \
+        -c "SHADEA#000000" \
+        -c "SHADEB#000000" \
+        -c "FONT#DDDDDD" \
+        -c "CANVAS#202020" \
+        -c "GRID#666666" \
+        -c "MGRID#AAAAAA" \
+        -c "FRAME#202020" \
+        -c "ARROW#FFFFFF" \
+	-h $HEIGHT -w $WIDTH -l 0 -a PNG -v "B" \
 	DEF:total=$DB:total:AVERAGE \
 	DEF:usage=$DB:usage:AVERAGE\
 	VDEF:min_total=total,MINIMUM \
