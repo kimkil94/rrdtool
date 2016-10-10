@@ -9,8 +9,8 @@ RUNDIR="/opt/rrd/rrdtool"
 CRONTAB="/var/spool/cron/crontabs/root"
 WIDTH="720"
 HEIGHT="200"
-established_conn=$(netstat -an | grep :80 | grep ESTABLISHED | wc -l)
-timewait_conn=$(netstat -an | grep :80 | grep TIME| wc -l)
+established_conn=$(netstat -an | grep ":80 " | grep ESTABLISHED | wc -l)
+timewait_conn=$(netstat -an | grep ":80 " | grep TIME| wc -l)
 echo $established_conn
 echo $timewait_conn
 
