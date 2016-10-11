@@ -28,24 +28,24 @@ RESET="\x1B[0m"
 
 #checking if is RRDTOOL installed on system
 #return codes: 1 error ; 0 ok ; 3 UNKNOWN
-function check_rrdtool {
-	os=$(lsb_release -si)
-	if [ $os == "Debian" ]; then
-		if  dpkg -s rrdtool &>/dev/null; then
-			return 0
-		else
-			apt-get update && apt-get -y install rrdtool
-			if dpkg -s rrdtool &> /dev/null;then
-				return 0
-			else
-				return 1
-			fi
-		fi
-	fi
-return 3
-}
-check_rrdtool
-result_check_rrdtool=$?
+#function check_rrdtool {
+#	os=$(lsb_release -si)
+#	if [ $os == "Debian" ]; then
+#		if  dpkg -s rrdtool &>/dev/null; then
+#			return 0
+#		else
+#			apt-get update && apt-get -y install rrdtool
+#			if dpkg -s rrdtool &> /dev/null;then
+#				return 0
+#			else
+#				return 1
+#			fi
+#		fi
+#	fi
+#return 3
+#}
+#check_rrdtool
+result_check_rrdtool=0
 
 
 function check_interface {
@@ -116,7 +116,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 
 	rrdupdate $RRDDB N:$in:$out
 
-	rrdtool graph $WORKDIR/$INTERFACE'_hourly.png' --start end-3600s   \
+	rrdtool graph $WORKDIR/$INTERFACE'_hour.png' --start end-3600s   \
         	-a PNG -t "Hourly - Network $HOST_IP Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
@@ -138,7 +138,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:_$INTERFACE'-TX'
 
 	#daily
-	rrdtool graph $WORKDIR/$INTERFACE'_daily.png' --start -1day   \
+	rrdtool graph $WORKDIR/$INTERFACE'_day.png' --start -1day   \
         	-a PNG -t "Daily - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
@@ -160,7 +160,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:$INTERFACE'-TX'
 
 	#create weekly graph
-	rrdtool graph $WORKDIR/$INTERFACE'_weekly.png' --start -1week   \
+	rrdtool graph $WORKDIR/$INTERFACE'_week.png' --start -1week   \
         	-a PNG -t "Weekly - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
