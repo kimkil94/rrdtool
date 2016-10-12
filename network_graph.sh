@@ -7,7 +7,7 @@ WORKDIR="/var/lib/rrd"
 WEBDIR="/var/www/html/stats"
 ACTUALDIR=$(pwd)
 RUNDIR="/opt/rrd/rrdtool"
-RRDDB="$WORKDIR/$INTERFACE'.rrd'"
+RRDDB="$WORKDIR/$INTERFACE.rrd"
 HOST_IP=""
 in=`$IFCONFIG $INTERFACE | grep bytes| awk '{print $2}' | cut -d : -f 2`
 out=`$IFCONFIG $INTERFACE | grep bytes | awk '{print $6}' |  cut -d : -f 2`
@@ -91,7 +91,7 @@ result_check_paths=$?
 
 
 #Create RRD if doesnt exist
-if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $result_check_paths == "0" ]; then
+#if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $result_check_paths == "0" ]; then
   
 
 
@@ -116,7 +116,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 
 	rrdupdate $RRDDB N:$in:$out
 
-	rrdtool graph $WORKDIR/$INTERFACE'_hour.png' --start end-3600s   \
+	rrdtool graph $WEBDIR/$INTERFACE'-hour.png' --start end-3600s   \
         	-a PNG -t "Hourly - Network $HOST_IP Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
@@ -138,7 +138,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:_$INTERFACE'-TX'
 
 	#daily
-	rrdtool graph $WORKDIR/$INTERFACE'_day.png' --start -1day   \
+	rrdtool graph $WEBDIR/$INTERFACE'-day.png' --start -1day   \
         	-a PNG -t "Daily - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
@@ -160,7 +160,7 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
         	LINE1:$INTERFACE'_txb'#C9B215:$INTERFACE'-TX'
 
 	#create weekly graph
-	rrdtool graph $WORKDIR/$INTERFACE'_week.png' --start -1week   \
+	rrdtool graph $WEBDIR/$INTERFACE'-week.png' --start -1week   \
         	-a PNG -t "Weekly - Network OpenWRT Interface $INTERFACE" --vertical-label "bits/s" \
         	-w $WIDTH -h $HEIGHT -r \
 		-c "BACK#000000" \
@@ -183,9 +183,9 @@ if [ $result_check_rrdtool == "0" ] && [ $result_check_interface == "0" ] && [ $
 
 
 
-	cp $WORKDIR/$INTERFACE'_hourly.png' $WEBDIR/$INTERFACE'_hourly.png'
-	cp $WORKDIR/$INTERFACE'_daily.png' $WEBDIR/$INTERFACE'_daily.png'
-	cp $WORKDIR/$INTERFACE'_weekly.png' $WEBDIR/$INTERFACE'_weekly.png'
+#	cp $WORKDIR/$INTERFACE'_hourly.png' $WEBDIR/$INTERFACE'_hourly.png'
+#	cp $WORKDIR/$INTERFACE'_daily.png' $WEBDIR/$INTERFACE'_daily.png'
+#	cp $WORKDIR/$INTERFACE'_weekly.png' $WEBDIR/$INTERFACE'_weekly.png'
 	
 if grep $RUNDIR/network_graph.sh /var/spool/cron/crontabs/root;then
 	echo "Crontab is set"
@@ -194,16 +194,3 @@ else
 	echo "  * * * * * $RUNDIR/network_graph.sh" >> /var/spool/cron/crontabs/root
 fi
 
-
-else
-	if [ $result_check_interface == "1" ];then
-		echo -e "Interface $RED $INTERFACE $RESET doesnt exist : $RED FAILED $RESET "
-	fi
-	if [ $result_check_paths == "1" ];then
-		echo -e "Paths $WEBDIR and $WORKDIR doesnt exist and cannot be created: $RED FAILED $RESET"
-	fi
-	if [ $result_check_rrdtool == "1" ];then
-		echo -e "RRDTOOL is not installed and try to install $RED FAILED $RESET"
-	fi
-fi
-	
