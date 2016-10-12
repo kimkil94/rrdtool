@@ -21,8 +21,8 @@ then
 	--step 60 \
 	DS:established:GAUGE:120:0:5000  \
 	DS:timewait:GAUGE:120:0:50000 \
-	RRA:MAX:0.5:1:600d \
-	RRA:AVERAGE:0.5:1:600d 
+	RRA:MAX:0.5:1:60000 \
+	RRA:AVERAGE:0.5:1:60000 
 fi
 
 

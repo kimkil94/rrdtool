@@ -53,8 +53,8 @@ then
         DS:r307:COUNTER:120:0:50000  \
         DS:r403:COUNTER:120:0:50000  \
         DS:r408:COUNTER:120:0:50000  \
-        RRA:MAX:0.5:1:600d \
-        RRA:AVERAGE:0.5:1:600d 
+        RRA:MAX:0.5:1:60000 \
+        RRA:AVERAGE:0.5:1:60000 
 fi
 
 

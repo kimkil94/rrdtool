@@ -27,8 +27,8 @@ then
 	--step 60 \
 	DS:five_load:GAUGE:120:0.00:50  \
 	DS:one_load:GAUGE:120:0.00:50 \
-	RRA:MAX:0.5:1:600d \
-	RRA:AVERAGE:0.5:1:600d 
+	RRA:MAX:0.5:1:60000 \
+	RRA:AVERAGE:0.5:1:60000 
 fi
 
 

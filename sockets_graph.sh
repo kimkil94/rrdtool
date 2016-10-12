@@ -29,8 +29,8 @@ then
 	DS:tcp_sockets:GAUGE:120:0:500000  \
 	DS:udp_sockets:GAUGE:120:0:500000 \
 	DS:unix_sockets:GAUGE:120:0:50000 \
-	RRA:LAST:0.5:1:600d  \
-	RRA:AVERAGE:0.5:1:600d  
+	RRA:LAST:0.5:1:60000  \
+	RRA:AVERAGE:0.5:1:60000  
 fi
 
 
@@ -56,7 +56,10 @@ do
 	DEF:tcp_sockets=$DB:tcp_sockets:LAST \
 	DEF:udp_sockets=$DB:udp_sockets:LAST \
 	DEF:unix_sockets=$DB:unix_sockets:LAST \
-	DEF:all_sockets=$DB:all_sockets:LAST\
+	DEF:all_sockets=$DB:all_sockets:LAST \
+	VDEF:lst_all_sockets=all_sockets,LAST \
+	VDEF:max_all_sockets=all_sockets,MAXIMUM \
+	VDEF:min_all_sockets=all_sockets,MINIMUM \
 	VDEF:min_tcp_sockets=tcp_sockets,MINIMUM \
         VDEF:max_tcp_sockets=tcp_sockets,MAXIMUM \
         VDEF:lst_tcp_sockets=tcp_sockets,LAST \
@@ -66,22 +69,22 @@ do
 	VDEF:min_unix_sockets=unix_sockets,MINIMUM \
         VDEF:max_unix_sockets=unix_sockets,MAXIMUM \
         VDEF:lst_unix_sockets=unix_sockets,LAST \
-	AREA:all_sockets#54EC48:"Allsockets" \
-	LINE1:udp_sockets#CC3118:"UDP sockets" \
-	LINE1:tcp_sockets#C9B215:"TCP sockets" \
-	AREA:tcp_sockets#ECD748: \
-	LINE1:unix_sockets#24BC14:"UNIX sockets"\
-	"COMMENT:    \l" \
-	"COMMENT:             " \
-	"COMMENT:             " \
-	"COMMENT:               " \
-        "COMMENT:TCP sockets (Last)    " \
-        "COMMENT:UDP sockets (Last)   \l" \
-	"COMMENT:                       "\
-	"COMMENT:                       "\
-	"COMMENT:            " \
-        "GPRINT:lst_tcp_sockets:%5.1lf %sB   "\
-        "GPRINT:lst_udp_sockets:%5.1lf %sB   \l" 
+	AREA:all_sockets#54EC48:"All sockets " \
+	"GPRINT:lst_all_sockets:%5.0lf  (current)   " \
+	"GPRINT:max_all_sockets:%5.0lf  (maximum)   " \
+	"GPRINT:min_all_sockets:%5.0lf  (minimum) \c" \
+	LINE1:udp_sockets#CC3118:"UDP sockets " \
+	"GPRINT:lst_udp_sockets:%5.0lf  (current)   " \
+	"GPRINT:max_udp_sockets:%5.0lf  (maximum)   " \
+	"GPRINT:min_tcp_sockets:%5.0lf  (minimum) \c" \
+	AREA:tcp_sockets#ECD748:"TCP sockets " \
+	"GPRINT:lst_tcp_sockets:%5.0lf  (current)   " \
+	"GPRINT:max_tcp_sockets:%5.0lf  (maximum)   " \
+	"GPRINT:min_tcp_sockets:%5.0lf  (minimum) \c" \
+	LINE1:unix_sockets#24BC14:"UNIX sockets:"\
+	"GPRINT:lst_unix_sockets:%5.0lf  (current)   " \
+	"GPRINT:max_unix_sockets:%5.0lf  (maximum)   " \
+	"GPRINT:min_unix_sockets:%5.0lf  (minimum) \c" 
 	 
 done
 

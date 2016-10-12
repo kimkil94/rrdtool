@@ -106,8 +106,8 @@ result_check_paths=$?
         	--step 60 \
         	DS:$INTERFACE'_rx':COUNTER:120:0:U \
         	DS:$INTERFACE'_tx':COUNTER:120:0:U \
-        	RRA:AVERAGE:0.5:1:600d \
-        	RRA:MAX:0.5:1:600d
+        	RRA:AVERAGE:0.5:1:60000 \
+        	RRA:MAX:0.5:1:60000
         	if [ -a $RRDDB ];then
                 	echo "RRD database $RRDDB was created"
                 	echo "OK"
